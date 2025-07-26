@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
 import 'package:res_task/core/constants/constants.dart';
-import 'package:res_task/features/home/presentation/pages/home_page/home_page.dart';
+import 'package:res_task/core/utils/app_colors.dart';
+import 'package:res_task/core/utils/styles.dart';
+
+import 'core/routes/app_route.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-       theme: ThemeData(
-         fontFamily: kFont
-       ),
+    return MaterialApp.router(
+      theme: ThemeData(fontFamily: kFont),
       debugShowCheckedModeBanner: false,
-      home: HomePage() ,
+      routerConfig: AppRouter.router,
     );
   }
 }
+
+
+
+
 
