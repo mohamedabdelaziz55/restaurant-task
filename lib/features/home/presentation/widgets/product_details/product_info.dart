@@ -48,6 +48,11 @@ class ProductInfo extends StatelessWidget {
               ),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Description:', style: Styles.textStyle18bold.copyWith(color: AppColors.darkBlack)),
+          ),
+
           SizedBox(height: width * 0.02),
           Text(
             product.description,
