@@ -6,8 +6,8 @@ import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/styles.dart';
 import '../sign_up/custom_text_field.dart';
 
-class SignUpBody extends StatelessWidget {
-  const SignUpBody({super.key});
+class LoginBody extends StatelessWidget {
+  const LoginBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +50,26 @@ class SignUpBody extends StatelessWidget {
                 ],
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("Sign up", style: Styles.textStyle20bold),
+                  Center(child: Text("Login", style: Styles.textStyle20bold)),
                   const SizedBox(height: 16),
-                  CustomTextField(hint: "Name", icon: Icons.person),
-                  const SizedBox(height: 12),
                   CustomTextField(hint: "Email", icon: Icons.email),
                   const SizedBox(height: 12),
                   CustomTextField(hint: "Password", icon: Icons.lock),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Text("ForGet password?"),
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        GoRouter.of(context).pushReplacement(AppRouter.kHomePage);
+
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.pColor,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -72,8 +78,8 @@ class SignUpBody extends StatelessWidget {
                         ),
                       ),
                       child: const Text(
-                        "SIGN UP",
-                        style: TextStyle(color: Colors.white),
+                        "Login",
+                        style: TextStyle(color: AppColors.white),
                       ),
                     ),
                   ),
@@ -91,12 +97,12 @@ class SignUpBody extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Already have an account?", style: Styles.textStyle14),
+              Text("Don't have an account?", style: Styles.textStyle14),
               TextButton(
                 onPressed: () {
-                  GoRouter.of(context).pushReplacement(AppRouter.kLogin);
+                  GoRouter.of(context).pushReplacement(AppRouter.kSignUp);
                 },
-                child: Text('Login'),
+                child: Text('SignUp'),
               ),
             ],
           ),
