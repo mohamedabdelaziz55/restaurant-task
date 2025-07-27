@@ -22,28 +22,21 @@ abstract class AppRouter {
       GoRoute(
         path: kOnBoarding,
         builder: (context, state) => const OnBoardingScreen(),
-      ), GoRoute(
+      ),
+      GoRoute(
         path: kDashboard,
         builder: (context, state) => const DashboardScreen(),
       ),
+      GoRoute(path: kSignUp, builder: (context, state) => const SignUp()),
+      GoRoute(path: kHomePage, builder: (context, state) => const HomePage()),
       GoRoute(
-        path: kSignUp,
-        builder: (context, state) => const SignUp(),
-      ),
-      GoRoute(
-        path: kHomePage,
-        builder: (context, state) => const HomePage(),
-      ), GoRoute(
         path: kProductDetailsPage,
         builder: (context, state) {
           final product = state.extra as ProductModel;
           return ProductDetailsPage(product: product);
         },
       ),
-      GoRoute(
-        path: kLogin,
-        builder: (context, state) => const Login(),
-      ),
+      GoRoute(path: kLogin, builder: (context, state) => const Login()),
     ],
   );
 }

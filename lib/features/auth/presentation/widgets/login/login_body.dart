@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:res_task/core/utils/assets.dart';
 
 import '../../../../../core/routes/app_route.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/styles.dart';
 import '../sign_up/custom_text_field.dart';
 
-class LoginBody extends StatelessWidget {
+class LoginBody extends StatefulWidget {
   const LoginBody({super.key});
 
+  @override
+  State<LoginBody> createState() => _LoginBodyState();
+}
+
+class _LoginBodyState extends State<LoginBody> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+ final GlobalKey _formKay= GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Stack(
       children: [
-        Image.asset('assets/images/logo.png', height: 65),
         ClipPath(
           clipper: TopWaveClipper(),
           child: Container(
@@ -25,7 +33,7 @@ class LoginBody extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 150.0),
               child: Center(
-                child: Image.asset('assets/images/logo.png', height: 65),
+                child: Image.asset(AssetsData.logo, height: 65),
               ),
             ),
           ),
@@ -91,7 +99,7 @@ class LoginBody extends StatelessWidget {
 
         // Bottom Text
         Positioned(
-          bottom: 150,
+          bottom: 28,
           left: 0,
           right: 0,
           child: Row(
@@ -102,7 +110,7 @@ class LoginBody extends StatelessWidget {
                 onPressed: () {
                   GoRouter.of(context).pushReplacement(AppRouter.kSignUp);
                 },
-                child: Text('SignUp'),
+                child: Text('SignUp', style: TextStyle(color: AppColors.pColor),),
               ),
             ],
           ),
