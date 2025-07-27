@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class CustomSnackBar {
   static void show(
       BuildContext context, {
+        required Color colorText,
         required String message,
         required Color backgroundColor,
         required IconData icon,
@@ -22,19 +23,19 @@ class CustomSnackBar {
           ),
           child: Row(
             children: [
-              Icon(icon, color: Colors.black87),
+              Icon(icon, color: colorText),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   message,
-                  style: const TextStyle(color: Colors.black87),
+                  style:  TextStyle(color: colorText),
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },
-                child: const Icon(Icons.close, color: Colors.white),
+                child:  Icon(Icons.close, color:colorText),
               ),
             ],
           ),

@@ -8,8 +8,9 @@ import '../../../../../core/utils/custom_snack_bar.dart';
 
 final isSignUpLoadingProvider = StateProvider<bool>((ref) => false);
 
-final signUpControllerProvider =
-NotifierProvider<SignUpController, void>(SignUpController.new);
+final signUpControllerProvider = NotifierProvider<SignUpController, void>(
+  SignUpController.new,
+);
 
 class SignUpController extends Notifier<void> {
   @override
@@ -52,7 +53,8 @@ class SignUpController extends Notifier<void> {
 
     if (email.isEmpty || password.isEmpty || name.isEmpty) {
       loading.state = false;
-      CustomSnackBar.show(
+      CustomSnackBar.show(        colorText: Colors.white,
+
         context,
         message: "Please fill in all fields",
         backgroundColor: Colors.red,
@@ -64,6 +66,7 @@ class SignUpController extends Notifier<void> {
     if (!email.contains("@") || !email.contains(".")) {
       loading.state = false;
       CustomSnackBar.show(
+        colorText: Colors.white,
         context,
         message: "Please enter a valid email address",
         backgroundColor: Colors.red,
@@ -75,10 +78,11 @@ class SignUpController extends Notifier<void> {
     String passwordStrength = getPasswordStrength(password);
     if (passwordStrength == "Weak") {
       loading.state = false;
-      CustomSnackBar.show(
+      CustomSnackBar.show(        colorText: Colors.white,
+
         context,
         message:
-        "Password is too weak. Use uppercase, numbers, and special characters",
+            "Password is too weak. Use uppercase, numbers, and special characters",
         backgroundColor: Colors.red,
         icon: Icons.lock_outline,
       );
@@ -92,20 +96,14 @@ class SignUpController extends Notifier<void> {
       await user.user?.updateDisplayName(name);
       await user.user?.reload();
 
-      loading.state = false;Future.delayed(const Duration(milliseconds: 600), () {
+      loading.state = false;
+      Future.delayed(const Duration(milliseconds: 600), () {
         GoRouter.of(context).pushReplacement(AppRouter.kDashboard);
       });
-
-      CustomSnackBar.show(
-        context,
-        message: "Account created successfully: ${user.user?.email}",
-        backgroundColor: Colors.green,
-        icon: Icons.done,
-      );
-
     } catch (e) {
       loading.state = false;
-      CustomSnackBar.show(
+      CustomSnackBar.show(        colorText: Colors.white,
+
         context,
         message: "Failed to create account: $e",
         backgroundColor: Colors.red,
