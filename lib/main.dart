@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:go_router/go_router.dart';
 import 'package:res_task/core/constants/constants.dart';
 import 'package:res_task/core/utils/app_colors.dart';
 import 'package:res_task/core/utils/styles.dart';
@@ -26,8 +25,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
 
 

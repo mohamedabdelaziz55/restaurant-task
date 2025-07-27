@@ -95,7 +95,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   onPressed: () {
                     if (_currentIndex == onBoardData.length - 1) {
-                      GoRouter.of(context).pushReplacement(AppRouter.kHomePage);
+                      GoRouter.of(context).pushReplacement(AppRouter.kSignUp);
                     } else {
                       _pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
