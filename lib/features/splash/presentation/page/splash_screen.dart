@@ -6,8 +6,6 @@ import 'package:res_task/core/utils/app_colors.dart';
 import 'package:res_task/core/utils/styles.dart';
 import '../../../../core/routes/app_route.dart';
 
-
-
 class SecondPage extends StatefulWidget {
   @override
   _SecondPageState createState() => _SecondPageState();
@@ -46,7 +44,6 @@ class _SecondPageState extends State<SecondPage> {
     Timer(Duration(milliseconds: 3850), () {
       setState(() {
         GoRouter.of(context).pushReplacement(AppRouter.kOnBoarding);
-
       });
     });
   }
@@ -115,7 +112,9 @@ class _SecondPageState extends State<SecondPage> {
                           FadeAnimatedText(
                             'Quick Foodie',
                             duration: Duration(milliseconds: 1700),
-                            textStyle: Styles.textStyle24.copyWith(color: AppColors.pColor)
+                            textStyle: Styles.textStyle24.copyWith(
+                              color: AppColors.pColor,
+                            ),
                           ),
                         ],
                       )
@@ -128,4 +127,3 @@ class _SecondPageState extends State<SecondPage> {
     );
   }
 }
-

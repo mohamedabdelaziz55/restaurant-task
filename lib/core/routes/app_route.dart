@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:res_task/core/Dashboard/presentation/pages/Dashboard/Dashboard.dart';
 import 'package:res_task/features/auth/presentation/pages/login.dart';
-import '../../features/OnBoard/presentation/page/on_boarding_screen.dart';
+import '../../features/splash/presentation/page/on_boarding_screen.dart';
 import '../../features/auth/presentation/pages/sign_up.dart';
 import '../../features/home/data/models/home_model/product_model.dart';
 import '../../features/home/presentation/pages/home_page.dart';
