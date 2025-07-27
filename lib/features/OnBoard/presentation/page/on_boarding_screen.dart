@@ -54,7 +54,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         SizedBox(height: height * 0.015),
                         Text(
                           item.description,
-                          style:Styles.textStyle16.copyWith(color: AppColors.gray,),
+                          style:Styles.textStyle16.copyWith(color: AppColors.grey,),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -74,7 +74,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   decoration: BoxDecoration(
                     color: _currentIndex == index
                         ? AppColors.pColor
-                        : AppColors.gray,
+                        : AppColors.grey,
                     borderRadius: BorderRadius.circular(20),
                   ),
                 );

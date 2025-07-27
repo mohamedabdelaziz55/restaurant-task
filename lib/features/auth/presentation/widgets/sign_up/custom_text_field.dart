@@ -13,7 +13,7 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       decoration: InputDecoration(
         hintText: hint,
-        prefixIcon: Icon(icon, color: AppColors.gray),
+        prefixIcon: Icon(icon, color: AppColors.grey),
         border: const UnderlineInputBorder(),
       ),
     );

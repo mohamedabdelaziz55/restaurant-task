@@ -67,7 +67,7 @@ class LoginBody extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        GoRouter.of(context).pushReplacement(AppRouter.kHomePage);
+                        GoRouter.of(context).pushReplacement(AppRouter.kDashboard);
 
                       },
                       style: ElevatedButton.styleFrom(

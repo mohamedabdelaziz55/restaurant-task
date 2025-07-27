@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:res_task/core/constants/constants.dart';
-import 'package:res_task/core/utils/app_colors.dart';
-import 'package:res_task/core/utils/styles.dart';
+
 
 import 'core/routes/app_route.dart';
 import 'firebase_options.dart';

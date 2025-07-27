@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:res_task/features/home/presentation/pages/widgets/product_card.dart';
+import 'package:res_task/features/home/presentation/widgets/home/product_card.dart';
 
 import '../../../data/data/product_data.dart';
+
 
 class CustomListViewHorizontal extends StatelessWidget {
   const CustomListViewHorizontal({super.key});
