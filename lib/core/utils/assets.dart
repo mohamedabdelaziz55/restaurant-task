@@ -4,4 +4,5 @@ class AssetsData {
   static const salad = 'assets/images/salad.png';
   static const pizza = 'assets/images/pizza.png';
   static const logo = 'assets/images/logo.png';
+  static const wallet = 'assets/images/wallet.png';
 }

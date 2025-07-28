@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:res_task/core/utils/app_colors.dart';
 import '../../../../../features/home/presentation/pages/home_page.dart';
+import '../../../../../features/wallet/presentation/page/wallet_page.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, this.i});
@@ -19,7 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final screens = [
     const HomePage(),
     const FavoritesPage(),
-    const CartPage(),
+    const WalletPage(),
     const ProfilePage(),
   ];
 
@@ -45,7 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         color: index == 1 ? AppColors.white : AppColors.grey,
       ),
       Icon(
-        Icons.shopping_cart_outlined,
+        Icons.wallet,
         size: 30,
         color: index == 2 ? AppColors.white : AppColors.grey,
       ),
@@ -111,11 +112,3 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class CartPage extends StatelessWidget {
-  const CartPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("hi")));
-  }
-}
