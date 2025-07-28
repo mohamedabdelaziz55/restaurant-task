@@ -1,72 +1,46 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:res_task/core/routes/app_route.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/styles.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../river_pod/reset_password/reset_password_river_pod.dart';
 
-class ResetPasswordPage extends StatefulWidget {
+
+class ResetPasswordPage extends ConsumerWidget {
   const ResetPasswordPage({super.key});
 
   @override
-  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final emailController = TextEditingController();
+    final resetState = ref.watch(resetPasswordProvider);
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  final TextEditingController emailController = TextEditingController();
-
-  void resetPassword() async {
-    final email = emailController.text.trim();
-    if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Please enter your email',
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-
-      );
-      print(email);
-      return;
-    }
-
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Password Reset Email has been sent!',
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'No user found for that email.',
-              style: TextStyle(fontSize: 18.0),
+    ref.listen<AsyncValue<void>>(resetPasswordProvider, (prev, next) {
+      next.whenOrNull(
+        data: (_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Password Reset Email has been sent!',
+                style: TextStyle(fontSize: 18.0),
+              ),
             ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Error: ${e.message}',
-              style: const TextStyle(fontSize: 18.0),
+          );
+        },
+        error: (err, _) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                err.toString(),
+                style: const TextStyle(fontSize: 18.0),
+              ),
             ),
-          ),
-        );
-      }
-    }
-  }
+          );
+        },
+      );
+    });
 
-  @override
-  Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -91,7 +65,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               SizedBox(height: height * 0.05),
               CustomEmailTextField(controller: emailController),
               SizedBox(height: height * 0.03),
-              CustomResetButton(onPressed: resetPassword),
+              CustomResetButton(
+                onPressed: () {
+                  ref
+                      .read(resetPasswordProvider.notifier)
+                      .sendResetPasswordEmail(emailController.text.trim());
+                },
+                isLoading: resetState.isLoading,
+              ),
               const Spacer(),
               Center(
                 child: TextButton(
@@ -123,6 +104,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 }
 
+
 class CustomEmailTextField extends StatelessWidget {
   final TextEditingController controller;
 
@@ -152,8 +134,13 @@ class CustomEmailTextField extends StatelessWidget {
 
 class CustomResetButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool isLoading;
 
-  const CustomResetButton({super.key, required this.onPressed});
+  const CustomResetButton({
+    super.key,
+    required this.onPressed,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,14 +148,18 @@ class CustomResetButton extends StatelessWidget {
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.pColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(
+        child: isLoading
+            ? const CircularProgressIndicator(
+          color: Colors.white,
+        )
+            : Text(
           'Send Email',
           style: Styles.textStyle16bold.copyWith(color: AppColors.white),
         ),
@@ -176,3 +167,4 @@ class CustomResetButton extends StatelessWidget {
     );
   }
 }
+
