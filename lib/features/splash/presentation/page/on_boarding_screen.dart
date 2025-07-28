@@ -83,7 +83,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             SizedBox(height: height * 0.02),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 height: height * 0.07,
                 child: ElevatedButton(

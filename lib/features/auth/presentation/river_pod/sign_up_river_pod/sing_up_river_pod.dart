@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../../core/routes/app_route.dart';
 import '../../../../../core/utils/custom_snack_bar.dart';
+import '../../../../../main.dart';
 
 final isSignUpLoadingProvider = StateProvider<bool>((ref) => false);
 
@@ -53,12 +53,12 @@ class SignUpController extends Notifier<void> {
 
     if (email.isEmpty || password.isEmpty || name.isEmpty) {
       loading.state = false;
-      CustomSnackBar.show(        colorText: Colors.white,
-
+      CustomSnackBar.show(
         context,
         message: "Please fill in all fields",
         backgroundColor: Colors.red,
         icon: Icons.warning_amber_rounded,
+        colorText: Colors.white,
       );
       return;
     }
@@ -66,11 +66,11 @@ class SignUpController extends Notifier<void> {
     if (!email.contains("@") || !email.contains(".")) {
       loading.state = false;
       CustomSnackBar.show(
-        colorText: Colors.white,
         context,
         message: "Please enter a valid email address",
         backgroundColor: Colors.red,
         icon: Icons.email_outlined,
+        colorText: Colors.white,
       );
       return;
     }
@@ -78,36 +78,42 @@ class SignUpController extends Notifier<void> {
     String passwordStrength = getPasswordStrength(password);
     if (passwordStrength == "Weak") {
       loading.state = false;
-      CustomSnackBar.show(        colorText: Colors.white,
-
+      CustomSnackBar.show(
         context,
         message:
             "Password is too weak. Use uppercase, numbers, and special characters",
         backgroundColor: Colors.red,
         icon: Icons.lock_outline,
+        colorText: Colors.white,
       );
       return;
     }
 
     try {
-      UserCredential user = await FirebaseAuth.instance
+      UserCredential response = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      await response.user?.updateDisplayName(name);
+      await FirebaseAuth.instance.currentUser?.reload();
 
-      await user.user?.updateDisplayName(name);
-      await user.user?.reload();
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      await sp.setString('user_id', currentUser?.uid ?? '');
+      await sp.setString('user_email', currentUser?.email ?? '');
+      await sp.setString('display_name', currentUser?.displayName ?? '');
 
       loading.state = false;
+
       Future.delayed(const Duration(milliseconds: 600), () {
         GoRouter.of(context).pushReplacement(AppRouter.kDashboard);
       });
     } catch (e) {
       loading.state = false;
-      CustomSnackBar.show(        colorText: Colors.white,
-
+      CustomSnackBar.show(
         context,
         message: "Failed to create account: $e",
         backgroundColor: Colors.red,
         icon: Icons.error_outline,
+        colorText: Colors.white,
       );
     }
   }

@@ -103,10 +103,17 @@ class _LoginBodyState extends ConsumerState<LoginBody> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Text("Forgot password?"),
+                    TextButton(
+                      style: ButtonStyle(),
+                      onPressed: () {
+                        GoRouter.of(context).push(AppRouter.kReset);
+                      },
+                      child: Text(
+                        "Forgot password?",
+                        style: TextStyle(color: AppColors.black),
+                      ),
                     ),
+
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(

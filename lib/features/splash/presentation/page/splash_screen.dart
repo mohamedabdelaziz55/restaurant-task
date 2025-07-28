@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:res_task/core/utils/app_colors.dart';
 import 'package:res_task/core/utils/styles.dart';
 import '../../../../core/routes/app_route.dart';
+import '../../../../main.dart';
 
 class SecondPage extends StatefulWidget {
   @override
@@ -43,7 +44,12 @@ class _SecondPageState extends State<SecondPage> {
     });
     Timer(Duration(milliseconds: 3850), () {
       setState(() {
-        GoRouter.of(context).pushReplacement(AppRouter.kOnBoarding);
+        final userId = sp.getString('user_id');
+        if (userId != null && userId.isNotEmpty) {
+          GoRouter.of(context).pushReplacement(AppRouter.kDashboard);
+        } else {
+          GoRouter.of(context).pushReplacement(AppRouter.kOnBoarding);
+        }
       });
     });
   }

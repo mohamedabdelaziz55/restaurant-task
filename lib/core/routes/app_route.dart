@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:res_task/core/Dashboard/presentation/pages/Dashboard/Dashboard.dart';
 import 'package:res_task/features/auth/presentation/pages/login.dart';
+import '../../features/auth/presentation/pages/reset_password.dart';
 import '../../features/splash/presentation/page/on_boarding_screen.dart';
 import '../../features/auth/presentation/pages/sign_up.dart';
 import '../../features/home/data/models/home_model/product_model.dart';
@@ -14,6 +15,7 @@ abstract class AppRouter {
   static const kHomePage = '/home';
   static const kSignUp = '/signUp';
   static const kLogin = '/login';
+  static const kReset = '/resetPassword';
   static const kDashboard = '/dashBoard';
   static const kProductDetailsPage = '/productDetails';
 
@@ -23,16 +25,18 @@ abstract class AppRouter {
       GoRoute(
         path: kOnBoarding,
         builder: (context, state) => const OnBoardingScreen(),
-      ), GoRoute(
-        path: kSplash,
-        builder: (context, state) =>  SecondPage(),
       ),
+      GoRoute(path: kSplash, builder: (context, state) => SecondPage()),
       GoRoute(
         path: kDashboard,
         builder: (context, state) => const DashboardScreen(),
       ),
       GoRoute(path: kSignUp, builder: (context, state) => const SignUp()),
       GoRoute(path: kHomePage, builder: (context, state) => const HomePage()),
+      GoRoute(
+        path: kReset,
+        builder: (context, state) => const ResetPasswordPage(),
+      ),
       GoRoute(
         path: kProductDetailsPage,
         builder: (context, state) {
