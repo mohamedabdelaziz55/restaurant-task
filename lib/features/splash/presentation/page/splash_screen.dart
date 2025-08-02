@@ -7,12 +7,12 @@ import 'package:res_task/core/utils/styles.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../main.dart';
 
-class SecondPage extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   @override
-  _SecondPageState createState() => _SecondPageState();
+  _SplashPageState createState() => _SplashPageState();
 }
 
-class _SecondPageState extends State<SecondPage> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();

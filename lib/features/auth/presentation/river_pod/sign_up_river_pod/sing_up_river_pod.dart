@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:random_string/random_string.dart';
+import 'package:res_task/core/%20data/service/shared_pref.dart';
+import '../../../../../core/ data/service/database_dart.dart';
 import '../../../../../core/routes/app_route.dart';
 import '../../../../../core/utils/custom_snack_bar.dart';
 import '../../../../../main.dart';
@@ -94,15 +97,24 @@ class SignUpController extends Notifier<void> {
           .createUserWithEmailAndPassword(email: email, password: password);
       await response.user?.updateDisplayName(name);
       await FirebaseAuth.instance.currentUser?.reload();
-
       final currentUser = FirebaseAuth.instance.currentUser;
-
       await sp.setString('user_id', currentUser?.uid ?? '');
       await sp.setString('user_email', currentUser?.email ?? '');
       await sp.setString('display_name', currentUser?.displayName ?? '');
 
       loading.state = false;
-
+      String Id = randomAlphaNumeric(10);
+      Map<String, dynamic> addUserInfo = {
+        "Name": name.trim(),
+        "Email": email.trim(),
+        "Wallet": "0",
+        "Id": Id,
+      };
+      await DatabaseMethods().addUserDetails(addUserInfo, Id);
+      await SharedPrefHelper().saveUserName(name.trim());
+      await SharedPrefHelper().saveUserEmail(email.trim());
+      await SharedPrefHelper().saveUserWallet("0");
+      await SharedPrefHelper().saveUserId(Id);
       Future.delayed(const Duration(milliseconds: 600), () {
         GoRouter.of(context).pushReplacement(AppRouter.kDashboard);
       });

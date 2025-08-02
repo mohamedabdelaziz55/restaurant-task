@@ -31,7 +31,12 @@ class ProductInfo extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(product.title, style: Styles.textStyle24bold.copyWith(color: AppColors.pColor)),
+              Flexible(
+                child: Text(
+                  product.name,
+                  style: Styles.textStyle18bold.copyWith(color: AppColors.pColor),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -50,30 +55,20 @@ class ProductInfo extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('Description:', style: Styles.textStyle18bold.copyWith(color: AppColors.darkBlack)),
+            child: Text(
+              'Description:',
+              style: Styles.textStyle18bold.copyWith(
+                color: AppColors.darkBlack,
+              ),
+            ),
           ),
 
           SizedBox(height: width * 0.02),
           Text(
-            product.description,
+            product.detail,
             style: Styles.textStyle14.copyWith(color: AppColors.textSecondary),
           ),
           SizedBox(height: width * 0.04),
-          Row(
-            children: [
-              const Icon(
-                Icons.timer_outlined,
-                size: 20,
-                color: AppColors.pColor,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Delivery Time: ${product.deliveryTime}',
-                style: Styles.textStyle14,
-              ),
-            ],
-          ),
-          SizedBox(height: width * 0.05),
         ],
       ),
     );

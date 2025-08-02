@@ -8,6 +8,7 @@ import '../../../../../core/routes/app_route.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/styles.dart';
 import '../sign_up/custom_text_field.dart';
+import 'custom_button.dart';
 
 class LoginBody extends ConsumerStatefulWidget {
   const LoginBody({super.key});
@@ -38,137 +39,131 @@ class _LoginBodyState extends ConsumerState<LoginBody> {
     final size = MediaQuery.of(context).size;
     final isLoading = ref.watch(loginProvider);
 
-    return Stack(
-      children: [
-        ClipPath(
-          clipper: TopWaveClipper(),
-          child: Container(
-            height: size.height * 0.55,
-            width: size.width,
-            color: AppColors.pColor,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 150.0),
-              child: Center(child: Image.asset(AssetsData.logo, height: 65)),
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () {
+              GoRouter.of(context).push(AppRouter.kLoginScreenAdmin);
+            },
+            child: Text('Admin', style: TextStyle(color: AppColors.white)),
+          ),
+        ],
+        backgroundColor: AppColors.pColor,
+      ),
+      body: Stack(
+        children: [
+          ClipPath(
+            clipper: TopWaveClipper(),
+            child: Container(
+              height: size.height * 0.40,
+              width: size.width,
+              color: AppColors.pColor,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 150.0),
+                child: Center(child: Image.asset(AssetsData.logo, height: 65)),
+              ),
             ),
           ),
-        ),
 
-        // White Card
-        Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
+          // White Card
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
                   ),
-                ],
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Center(child: Text("Login", style: Styles.textStyle20bold)),
-                    const SizedBox(height: 16),
-                    CustomTextField(
-                      hint: "Email",
-                      icon: Icons.email,
-                      controller: emailController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Enter email";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    CustomTextField(
-                      hint: "Password",
-                      icon: Icons.lock,
-                      controller: passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Enter password";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      style: ButtonStyle(),
-                      onPressed: () {
-                        GoRouter.of(context).push(AppRouter.kReset);
-                      },
-                      child: Text(
-                        "Forgot password?",
-                        style: TextStyle(color: AppColors.black),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
                       ),
-                    ),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: isLoading ? null : _handleLogin,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.pColor,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    ],
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Center(
+                          child: Text("Login", style: Styles.textStyle20bold),
+                        ),
+                        const SizedBox(height: 16),
+                        CustomTextField(
+                          hint: "Email",
+                          icon: Icons.email,
+                          controller: emailController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter email";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        CustomTextField(
+                          hint: "Password",
+                          icon: Icons.lock,
+                          controller: passwordController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter password";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        TextButton(
+                          style: ButtonStyle(),
+                          onPressed: () {
+                            GoRouter.of(context).push(AppRouter.kReset);
+                          },
+                          child: Text(
+                            "Forgot password?",
+                            style: TextStyle(color: AppColors.black),
                           ),
                         ),
-                        child: isLoading
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Text(
-                                "Login",
-                                style: TextStyle(color: AppColors.white),
+
+                        CustomButton(
+                          name: "Login",
+                          onPressed: isLoading ? null : _handleLogin,
+                          isLoading: isLoading,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Don't have an account?", style: Styles.textStyle14),
+                            TextButton(
+                              onPressed: () {
+                                GoRouter.of(context).pushReplacement(AppRouter.kSignUp);
+                              },
+                              child: Text(
+                                'SignUp',
+                                style: TextStyle(color: AppColors.pColor),
                               ),
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
-        // Bottom Text
-        Positioned(
-          bottom: 28,
-          left: 0,
-          right: 0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Don't have an account?", style: Styles.textStyle14),
-              TextButton(
-                onPressed: () {
-                  GoRouter.of(context).pushReplacement(AppRouter.kSignUp);
-                },
-                child: Text(
-                  'SignUp',
-                  style: TextStyle(color: AppColors.pColor),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+
+        ],
+      ),
     );
   }
 }

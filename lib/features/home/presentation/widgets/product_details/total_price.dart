@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/custom_snack_bar.dart';
 import '../../../../../core/utils/styles.dart';
+import '../../../../cart/presentation/river_pod/cart_river_pod.dart';
+import '../../../../home/data/models/home_model/product_model.dart';
 
-class TotalPrice extends StatelessWidget {
+class TotalPrice extends ConsumerWidget {
   final String price;
   final int quantity;
+  final ProductModel product;
 
-  const TotalPrice({super.key, required this.price, required this.quantity});
+  const TotalPrice({
+    super.key,
+    required this.price,
+    required this.quantity,
+    required this.product,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
     final total = (double.tryParse(price) ?? 0.0) * quantity;
 
@@ -39,7 +48,16 @@ class TotalPrice extends StatelessWidget {
           Text('\$${total.toStringAsFixed(2)}', style: Styles.textStyle18bold),
           SizedBox(width: width * 0.04),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              ref.read(cartProvider.notifier).addToCart(product, quantity);
+              CustomSnackBar.show(
+                context,
+                message: 'Added to cart',
+                backgroundColor: Colors.green,
+                colorText: Colors.white,
+                icon: Icons.warning,
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.pColor,
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),

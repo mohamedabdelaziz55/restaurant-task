@@ -20,7 +20,7 @@ class ProductDetailsPage extends StatelessWidget {
         leading: const BackButton(color: AppColors.pColor),
         centerTitle: true,
         title: Text(
-          product.title,
+          product.name,
           style: Styles.textStyle18bold.copyWith(color: AppColors.pColor),
         ),
       ),
