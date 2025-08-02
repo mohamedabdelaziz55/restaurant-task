@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:res_task/core/%20data/service/shared_pref.dart';
 import 'package:res_task/core/utils/app_colors.dart';
 import 'package:res_task/core/utils/assets.dart';
 import 'package:res_task/core/utils/styles.dart';
+import 'package:res_task/core/constants/constants.dart';
+import '../../../../core/ data/service/database_dart.dart';
+import '../../../../core/utils/custom_snack_bar.dart';
 
 class WalletPageBody extends StatefulWidget {
   const WalletPageBody({super.key});
@@ -11,31 +20,146 @@ class WalletPageBody extends StatefulWidget {
 }
 
 class _WalletPageBodyState extends State<WalletPageBody> {
-  double walletBalance = 150;
+  String? wallet;
+  double walletBalance = 0;
   double selectedAmount = 0;
+  Map<String, dynamic>? paymentIntentData;
 
-  void _navigateToAddCard() {
-    if (selectedAmount == 0) {
-      ScaffoldMessenger.of(
+  @override
+  void initState() {
+    super.initState();
+    loadWalletBalance();
+    Stripe.publishableKey = publisab;
+    Stripe.instance.applySettings();
+  }
+
+  Future<void> loadWalletBalance() async {
+    final walletStr = await SharedPrefHelper().getUserWallet();
+    wallet = walletStr;
+    walletBalance = double.tryParse(walletStr ?? '0') ?? 0;
+    setState(() {});
+  }
+
+  Future<void> makePayment(String amount) async {
+    try {
+      paymentIntentData = await createPaymentIntent(amount, 'usd');
+
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: paymentIntentData!['client_secret'],
+          style: ThemeMode.dark,
+          merchantDisplayName: 'ResTask App',
+        ),
+      );
+
+      await displayPaymentSheet();
+    } catch (e) {
+      print('exception: $e');
+      CustomSnackBar.show(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Please select an amount')));
-      return;
+        message: 'Payment Failed: $e',
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.red.shade900,
+        icon: Icons.error_outline,
+      );
+    }
+  }
+
+  Future<void> displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
+
+      setState(() {
+        walletBalance += selectedAmount;
+        selectedAmount = 0;
+      });
+
+      final walletValue = walletBalance.toStringAsFixed(0);
+
+      await SharedPrefHelper().saveUserWallet(walletValue);
+
+      final userId = await SharedPrefHelper().getUserId();
+      if (userId != null && userId.isNotEmpty) {
+        await DatabaseMethods().upDataUserWallet(userId, walletValue);
+      }
+
+      CustomSnackBar.show(
+        context,
+        message: "Payment Successful",
+        backgroundColor: Colors.green.shade100,
+        colorText: Colors.green.shade900,
+        icon: Icons.check_circle_outline,
+      );
+    } catch (e) {
+      print("Error in payment sheet: $e");
+      if (e is StripeException) {
+        CustomSnackBar.show(
+          context,
+          message: "Payment Canceled",
+          backgroundColor: Colors.red.shade900,
+          colorText: Colors.orange.shade900,
+          icon: Icons.info_outline,
+        );
+      } else {
+        CustomSnackBar.show(
+          context,
+          message: "Payment Failed",
+          backgroundColor: Colors.red.shade100,
+          colorText: Colors.red.shade900,
+          icon: Icons.error_outline,
+        );
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> createPaymentIntent(String amount, String currency) async {
+    try {
+      final url = Uri.parse('https://api.stripe.com/v1/payment_intents');
+      final response = await http.post(
+        url,
+        body: {
+          'amount': (int.parse(amount) * 100).toString(),
+          'currency': currency,
+          'payment_method_types[]': 'card',
+        },
+        headers: {
+          'Authorization': 'Bearer $secret',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      );
+      return json.decode(response.body);
+    } catch (err) {
+      throw Exception('Error creating payment intent: $err');
+    }
+  }
+
+  void _navigateToAddCard() async {
+    double amountToPay = selectedAmount;
+
+    if (amountToPay == 0) {
+      final customAmount = await showDialog<double>(
+        context: context,
+        builder: (context) => const CustomAmountDialog(),
+      );
+
+      if (customAmount == null || customAmount <= 0) {
+        CustomSnackBar.show(
+          context,
+          message: 'You must enter a valid amount',
+          backgroundColor: Colors.amber.shade100,
+          colorText: Colors.amber.shade900,
+          icon: Icons.warning_amber_outlined,
+        );
+        return;
+      }
+
+      amountToPay = customAmount;
+      selectedAmount = amountToPay;
     }
 
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (_) => AddCardScreen(
-    //       amount: selectedAmount,
-    //       onPaymentSuccess: (newAmount) {
-    //         setState(() {
-    //           walletBalance += newAmount;
-    //         });
-    //       },
-    //     ),
-    //   ),
-    // );
+    await makePayment(amountToPay.toStringAsFixed(0));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +183,7 @@ class _WalletPageBodyState extends State<WalletPageBody> {
                   children: [
                     const Text('Your Wallet', style: TextStyle(fontSize: 16)),
                     Text(
-                      '\$${walletBalance.toStringAsFixed(0)}',
+                      '\$${walletBalance.toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -85,6 +209,10 @@ class _WalletPageBodyState extends State<WalletPageBody> {
               return ChoiceChip(
                 label: Text('\$$amount'),
                 selected: selectedAmount == amount,
+                selectedColor: AppColors.pColor,
+                labelStyle: TextStyle(
+                  color: selectedAmount == amount ? Colors.white : Colors.black,
+                ),
                 onSelected: (_) {
                   setState(() {
                     selectedAmount = amount.toDouble();
@@ -110,6 +238,52 @@ class _WalletPageBodyState extends State<WalletPageBody> {
           ),
         ],
       ),
+    );
+  }
+}
+class CustomAmountDialog extends StatefulWidget {
+  const CustomAmountDialog({super.key});
+
+  @override
+  State<CustomAmountDialog> createState() => _CustomAmountDialogState();
+}
+
+class _CustomAmountDialogState extends State<CustomAmountDialog> {
+  final TextEditingController _controller = TextEditingController();
+  String? error;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Amount',style: TextStyle(color: AppColors.pColor)),
+      content: TextField(
+        controller: _controller,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          hintText: 'Enter Amount',
+          errorText: error,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            final value = _controller.text.trim();
+            final parsed = double.tryParse(value);
+            if (parsed == null || parsed <= 0) {
+              setState(() {
+                error = 'Enter valid amount';
+              });
+              return;
+            }
+            GoRouter.of(context).pop(parsed);
+          },
+          child:  Text('Confirm', style: TextStyle(color: AppColors.black),),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(null),
+          child: const Text('Cancel',style: TextStyle(color: AppColors.pColor)),
+        ),
+      ],
     );
   }
 }

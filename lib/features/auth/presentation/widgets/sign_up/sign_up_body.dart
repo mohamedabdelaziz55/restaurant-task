@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:res_task/features/auth/presentation/widgets/login/custom_button.dart';
 
 import '../../../../../core/routes/app_route.dart';
 import '../../../../../core/utils/app_colors.dart';
@@ -67,120 +68,101 @@ class _SignUpBodyState extends ConsumerState<SignUpBody> {
           alignment: Alignment.center,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Sign up", style: Styles.textStyle20bold),
-                    const SizedBox(height: 16),
-                    CustomTextField(
-                      hint: "Name",
-                      icon: Icons.person,
-                      controller: nameController,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Name is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    CustomTextField(
-                      hint: "Email",
-                      icon: Icons.email,
-                      controller: emailController,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Email is required';
-                        }
-                        if (!value.contains('@') || !value.contains('.')) {
-                          return 'Enter a valid email address';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    CustomTextField(
-                      hint: "Password",
-                      icon: Icons.lock,
-                      controller: passwordController,
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: isLoading
-                            ? null
-                            : () async {
-                          if (_formKey.currentState!.validate()) {
-                            handleSignUp();
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.pColor,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: isLoading
-                            ? const CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        )
-                            : const Text(
-                          "SIGN UP",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
                     ),
                   ],
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Sign up", style: Styles.textStyle20bold),
+                      const SizedBox(height: 16),
+                      CustomTextField(
+                        hint: "Name",
+                        icon: Icons.person,
+                        controller: nameController,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Name is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      CustomTextField(
+                        hint: "Email",
+                        icon: Icons.email,
+                        controller: emailController,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Email is required';
+                          }
+                          if (!value.contains('@') || !value.contains('.')) {
+                            return 'Enter a valid email address';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      CustomTextField(
+                        hint: "Password",
+                        icon: Icons.lock,
+                        controller: passwordController,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password is required';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+              
+                       CustomButton(
+                         isLoading: isLoading,
+                         name: "Sign Up" , onPressed:isLoading
+                                 ? null
+                                 : () async {
+                               if (_formKey.currentState!.validate()) {
+                                 handleSignUp();
+                               }
+                             },
+                             ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Already have an account?", style: Styles.textStyle14),
+                          TextButton(
+                            onPressed: () {
+                              GoRouter.of(context).pushReplacement(AppRouter.kLogin);
+                            },
+                            child: Text('Login', style: TextStyle(color: AppColors.pColor)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-        Positioned(
-          bottom: 28,
-          left: 0,
-          right: 0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Already have an account?", style: Styles.textStyle14),
-              TextButton(
-                onPressed: () {
-                  GoRouter.of(context).pushReplacement(AppRouter.kLogin);
-                },
-                child: Text('Login', style: TextStyle(color: AppColors.pColor)),
-              ),
-            ],
-          ),
-        ),
+
       ],
     );
   }

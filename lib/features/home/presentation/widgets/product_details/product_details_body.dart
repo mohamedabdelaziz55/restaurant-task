@@ -18,24 +18,25 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
     final width = MediaQuery.of(context).size.width;
     return  Column(
       children: [
-        ProductImageWidget(imagePath: widget.product.imagePath),
+        ProductImageWidget(imagePath: widget.product.image),
         SizedBox(height: width * 0.04),
         Expanded(
-          child: ProductInfo(
-            product: widget.product,
-            quantity: quantity,
-            onIncrement: () {
-              setState(() => quantity++);
-            },
-            onDecrement: () {
-              if (quantity > 1) setState(() => quantity--);
-            },
+          child: SingleChildScrollView(
+            child: ProductInfo(
+              product: widget.product,
+              quantity: quantity,
+              onIncrement: () {
+                setState(() => quantity++);
+              },
+              onDecrement: () {
+                if (quantity > 1) setState(() => quantity--);
+              },
+            ),
           ),
         ),
         TotalPrice(
-
-          price: widget.product.price,
-          quantity: quantity,
+          price: widget.product.price.toString(),
+          quantity: quantity, product: widget.product,
         ),
       ],
     );
